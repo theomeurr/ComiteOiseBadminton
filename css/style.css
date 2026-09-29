@@ -1,0 +1,1043 @@
+/* =====================================================================
+   COMITÉ OISE BADMINTON — direction artistique « LE TERRAIN »
+   Le site est un terrain de badminton vu du dessus : les lignes
+   structurent la page, les zones servent de boutons, les chiffres
+   sont des cotes de plan ou un tableau d'affichage.
+   ===================================================================== */
+
+:root {
+  /* Charte */
+  --bg: #0E4D36;        /* fond vert gymnase */
+  --court: #125A40;     /* surface du terrain */
+  --dark: #0A3A29;      /* zone sombre */
+  --darker: #062A1D;    /* zone très sombre */
+  --ink: #F4F1E8;       /* lignes et texte, blanc cassé */
+  --ink-2: #CDD6C9;     /* texte secondaire (AA sur --bg et --dark) */
+  --rule: rgba(244, 241, 232, 0.38);
+  --accent: #D7F25C;    /* jaune-vert volant */
+  --on-accent: #0A3A29;
+
+  /* Terrain */
+  --lw: 4px;            /* épaisseur des lignes */
+  --post: 22px;         /* diamètre des poteaux */
+
+  /* Mise en page */
+  --gutter: 80px;
+  --max: 1280px;
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --text: "Barlow", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 24px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.88;
+  letter-spacing: -0.005em;
+  overflow-wrap: anywhere;
+}
+
+p, address { margin: 0; font-style: normal; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+a { color: inherit; }
+b, strong { font-weight: 700; }
+i { font-style: normal; }
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.skip {
+  position: absolute;
+  top: -200px;
+  left: 16px;
+  z-index: 200;
+  padding: 12px 18px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+}
+.skip:focus { top: 12px; }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.wrap {
+  max-width: calc(var(--max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.arrow { display: inline-block; }
+.nowrap { white-space: nowrap; }
+
+/* Nombres en accent, façon tableau de score */
+.num {
+  font-family: var(--display);
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: 0;
+}
+
+/* Lien d'action */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.link-arrow:hover,
+.link-arrow:focus-visible { border-bottom-color: var(--accent); }
+.link-arrow .arrow { transition: transform 0.2s ease; }
+.link-arrow:hover .arrow { transform: translateX(4px); }
+
+/* Bouton principal */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 60px;
+  padding: 0 28px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 28px;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.btn:hover,
+.btn:focus-visible { background: var(--ink); }
+.btn .arrow { transition: transform 0.2s ease; }
+.btn:hover .arrow { transform: translateX(6px); }
+
+/* ---------- En-tête ---------- */
+.site-header {
+  border-bottom: 1px solid var(--rule);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  min-height: 104px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 44px;
+  text-decoration: none;
+}
+
+.brand-num {
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 60px;
+  line-height: 0.8;
+  color: var(--accent);
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.nav ul {
+  display: flex;
+  gap: 36px;
+}
+
+.nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-top: 3px;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.nav a:hover,
+.nav a:focus-visible { border-bottom-color: var(--accent); }
+
+.nav-toggle { display: none; }
+
+/* ---------- Hero : le terrain ---------- */
+.hero {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+/* Cotes de plan, alignées sur les zones du terrain
+   (fond gauche | avant | fond droit) */
+.cotes {
+  display: grid;
+  grid-template-columns: 35.22fr 29.56fr 35.22fr;
+  height: 40px;
+  margin-bottom: 40px;
+}
+
+.cote {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 2px solid var(--ink);
+}
+.cote:last-child { border-right: 2px solid var(--ink); }
+
+.cote::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--ink);
+}
+
+.cote-text {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 0 16px;
+  background: var(--bg);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.cote-text .num {
+  font-size: 40px;
+  line-height: 1;
+}
+
+/* Le terrain : 13,40 × 6,10 m, filet vertical au centre */
+.court {
+  position: relative;
+  aspect-ratio: 1340 / 610;
+  background: var(--court);
+  border: var(--lw) solid var(--ink);
+  container-type: inline-size;
+}
+
+.lines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.ln {
+  position: absolute;
+  background: var(--ink);
+}
+
+/* lignes de service long en double : 0,76 m du fond */
+.ln-lsd-a { left: calc(5.67% - var(--lw) / 2); top: 0; width: var(--lw); height: 100%; }
+.ln-lsd-b { left: calc(94.33% - var(--lw) / 2); top: 0; width: var(--lw); height: 100%; }
+
+/* lignes de service court : 1,98 m du filet */
+.ln-ssl-a { left: calc(35.22% - var(--lw) / 2); top: 0; width: var(--lw); height: 100%; }
+.ln-ssl-b { left: calc(64.78% - var(--lw) / 2); top: 0; width: var(--lw); height: 100%; }
+
+/* couloirs de simple : 0,46 m des bords */
+.ln-sgl-a { top: calc(7.54% - var(--lw) / 2); left: 0; height: var(--lw); width: 100%; }
+.ln-sgl-b { top: calc(92.46% - var(--lw) / 2); left: 0; height: var(--lw); width: 100%; }
+
+/* lignes médianes : du fond à la ligne de service court */
+.ln-ctr-a { top: calc(50% - var(--lw) / 2); left: 0; height: var(--lw); width: 35.22%; }
+.ln-ctr-b { top: calc(50% - var(--lw) / 2); left: 64.78%; height: var(--lw); width: 35.22%; }
+
+/* filet en pointillés */
+.ln-net {
+  left: calc(50% - var(--lw) / 2);
+  top: 0;
+  width: var(--lw);
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--ink) 0 var(--lw),
+    transparent var(--lw) calc(var(--lw) * 2.5)
+  );
+}
+
+/* poteaux : les seuls ronds du site */
+.post {
+  position: absolute;
+  z-index: 3;
+  width: var(--post);
+  height: var(--post);
+  border-radius: 50%;
+  background: var(--accent);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.post-a { top: calc(-0.7 * var(--post) - var(--lw)); }
+.post-b { bottom: calc(-0.7 * var(--post) - var(--lw)); }
+
+/* Zones */
+.zone {
+  position: absolute;
+  z-index: 2;
+}
+
+/* moitié gauche : le titre chevauche volontairement les lignes */
+.zone-title {
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 100%;
+  padding: 3cqw 2cqw 4.2cqw 3cqw;
+  pointer-events: none;
+}
+.zone-title h1 {
+  font-size: 11.4cqw;
+  color: var(--ink);
+}
+.zone-title p {
+  max-width: 34ch;
+  margin-top: auto;
+  padding-top: 2cqw;
+  font-weight: 500;
+  font-size: max(15px, 1.45cqw);
+  line-height: 1.4;
+}
+
+/* carrés de service (côté droit) */
+.zone-svc {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5cqw 1.7cqw;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+.zone-svc-droit {
+  left: calc(64.78% + var(--lw) / 2);
+  top: calc(7.54% + var(--lw) / 2);
+  width: calc(29.55% - var(--lw));
+  height: calc(42.46% - var(--lw));
+}
+.zone-svc-gauche {
+  left: calc(64.78% + var(--lw) / 2);
+  top: calc(50% + var(--lw) / 2);
+  width: calc(29.55% - var(--lw));
+  height: calc(42.46% - var(--lw));
+}
+.zone-svc:hover,
+.zone-svc:focus-visible { background: var(--dark); }
+
+.zone-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: max(11px, 0.86cqw);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.zone-label::before {
+  content: "";
+  flex: none;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+}
+.zone-net .zone-label { white-space: nowrap; }
+
+.zone-cta {
+  display: block;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 3.4cqw;
+  line-height: 0.92;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.zone-cta .arrow { transition: transform 0.2s ease; }
+.zone:hover .zone-cta .arrow { transform: translateX(0.15em); }
+
+/* zone avant, entre le filet et le service court : bouton principal */
+.zone-net {
+  left: calc(50% + var(--lw) / 2);
+  top: calc(7.54% + var(--lw) / 2);
+  width: calc(14.78% - var(--lw));
+  height: calc(84.92% - var(--lw));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.1cqw 1.1cqw;
+  background: var(--accent);
+  color: var(--on-accent);
+  text-decoration: none;
+}
+.zone-net:hover,
+.zone-net:focus-visible { background: var(--ink); }
+.zone-net .zone-cta {
+  color: var(--on-accent);
+  font-size: 3.6cqw;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  text-orientation: sideways;
+  transform: rotate(180deg);
+  align-self: center;
+}
+.zone-net .zone-cta .arrow { transform: rotate(90deg); }
+.zone-net:hover .zone-cta .arrow { transform: rotate(90deg) translateX(0.15em); }
+
+/* ---------- Titres de section ---------- */
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  padding-bottom: 20px;
+  margin-bottom: 32px;
+  border-bottom: 3px solid var(--ink);
+}
+.section-head h2 { font-size: 72px; }
+
+/* ---------- Tableau des rencontres ---------- */
+.rencontres { padding-top: 64px; }
+
+.board {
+  position: relative;
+  background: var(--dark);
+  border: 3px solid var(--ink);
+}
+
+.board-tag {
+  position: absolute;
+  right: -3px;
+  top: -3px;
+  padding: 8px 14px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 22px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.board-tag span {
+  font-family: var(--text);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  margin-right: 8px;
+  vertical-align: 0.2em;
+}
+
+.board table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.board th {
+  padding: 18px 24px;
+  border-bottom: 3px solid var(--ink);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--ink-2);
+}
+.board th:first-child { padding: 18px 0 18px 0; width: 132px; text-align: center; }
+
+.board td {
+  padding: 0 24px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+}
+.board tbody tr:last-child td { border-bottom: 0; }
+
+.board td.date {
+  width: 132px;
+  padding: 0;
+  background: var(--darker);
+  border-right: 3px solid var(--ink);
+}
+.board td.date time,
+.board td.date .date-tbd {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 104px;
+  padding: 10px 6px;
+}
+.board td.date b {
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 60px;
+  line-height: 0.85;
+  color: var(--accent);
+}
+.board td.date .date-tbd b { font-size: 30px; }
+.board td.date .mois {
+  margin-top: 8px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.board td.comp {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+.board td.lieu { width: 180px; font-weight: 600; }
+.board td.cat { width: 160px; color: var(--ink-2); }
+.board td.insc { width: 170px; text-align: right; }
+
+/* ---------- Quatre couloirs ---------- */
+.couloirs { padding-top: 112px; }
+
+.lanes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 6px solid var(--ink);
+  border-bottom: 6px solid var(--ink);
+}
+
+.lane {
+  padding: 36px 28px 48px;
+  border-left: 3px solid var(--ink);
+}
+.lane:first-child { border-left: 0; padding-left: 0; }
+.lane:last-child { padding-right: 0; }
+
+.lane-num {
+  display: block;
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 72px;
+  line-height: 0.85;
+  color: var(--accent);
+}
+
+.lane h2 {
+  margin-top: 28px;
+  font-size: 44px;
+  font-weight: 800;
+}
+.lane h2 a {
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+}
+.lane h2 a:hover,
+.lane h2 a:focus-visible { border-bottom-color: var(--accent); }
+
+.lane p {
+  margin-top: 18px;
+  font-size: 16px;
+  color: var(--ink-2);
+}
+
+/* ---------- 16 clubs ---------- */
+.clubs { padding-top: 112px; }
+
+.clubs-grid {
+  display: grid;
+  grid-template-columns: 4fr 8fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.clubs-intro h2 { font-size: 72px; }
+.clubs-intro h2 .num { font-size: 1.15em; }
+
+.clubs-intro p {
+  max-width: 40ch;
+  margin-top: 24px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.clubs-intro .btn { margin-top: 32px; }
+
+.photo-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  margin-top: 48px;
+  border: 3px solid var(--ink);
+  background: var(--court);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.clubs-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 48px;
+  border-top: 3px solid var(--ink);
+}
+
+.clubs-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ville {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 32px;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+.club {
+  flex: 1;
+  font-size: 14px;
+  text-align: right;
+  color: var(--ink-2);
+}
+
+/* ---------- Pied de page ---------- */
+.site-footer {
+  margin-top: 128px;
+  background: var(--dark);
+  border-top: var(--lw) solid var(--ink);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1.2fr;
+  gap: 48px;
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+.footer-brand .brand-num { font-size: 72px; }
+
+.footer-id address {
+  margin-top: 24px;
+  color: var(--ink-2);
+}
+
+.site-footer h2 {
+  font-family: var(--text);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.22em;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.footer-contact li + li { margin-top: 8px; }
+.footer-contact a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.footer-contact a:hover,
+.footer-contact a:focus-visible { border-bottom-color: var(--accent); }
+
+.footer-partners ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+.footer-partners li {
+  padding-left: 12px;
+  border-left: 2px solid var(--accent);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding-top: 20px;
+  padding-bottom: 24px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.footer-bottom .wrap { border-top: 1px solid var(--rule); }
+
+/* =====================================================================
+   RESPONSIVE
+   ===================================================================== */
+
+@media (max-width: 1180px) {
+  :root { --gutter: 40px; }
+  .section-head h2,
+  .clubs-intro h2 { font-size: 60px; }
+  .board td.comp { font-size: 26px; }
+  .lanes { grid-template-columns: repeat(2, 1fr); }
+  .lane:nth-child(3) { border-left: 0; padding-left: 0; }
+  .lane:nth-child(2) { padding-right: 0; }
+  .lane:nth-child(-n + 2) { border-bottom: 3px solid var(--ink); }
+  .lane:nth-child(4) { padding-right: 0; }
+  .clubs-grid { grid-template-columns: 1fr; gap: 48px; }
+  .photo-slot { display: none; }
+}
+
+/* Menu en panneau plein écran */
+@media (max-width: 900px) {
+  .header-inner { min-height: 80px; }
+  .brand-num { font-size: 48px; }
+
+  .nav-toggle {
+    position: relative;
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 16px;
+    border: 2px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    font: 600 12px/1 var(--text);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .nav-toggle-close { display: none; }
+  .nav-toggle[aria-expanded="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-open { display: none; }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-close { display: inline; }
+
+  .js .nav {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    padding: 112px var(--gutter) 40px;
+    background: var(--darker);
+    overflow-y: auto;
+  }
+  .js .nav.is-open { display: block; }
+  .js .nav-open { overflow: hidden; }
+
+  .js .nav ul {
+    flex-direction: column;
+    gap: 0;
+    border-top: 3px solid var(--ink);
+  }
+  .js .nav li { border-bottom: 1px solid var(--rule); }
+  .js .nav a {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 64px;
+    padding: 12px 0;
+    border-bottom: 0;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 44px;
+    letter-spacing: 0;
+    line-height: 0.9;
+  }
+  .js .nav a::after {
+    content: "→";
+    color: var(--accent);
+  }
+
+  /* sans JavaScript : menu simplement replié sous la marque */
+  .zone-net .zone-label::before { display: none; }
+  .nav-open .brand { position: relative; z-index: 60; }
+
+  .no-js .nav-toggle { display: none; }
+  .no-js .header-inner { flex-wrap: wrap; padding-bottom: 8px; }
+  .no-js .nav { width: 100%; }
+  .no-js .nav ul { flex-wrap: wrap; gap: 4px 24px; }
+}
+
+/* Le terrain passe à la verticale, le filet devient horizontal */
+@media (max-width: 719px) {
+  :root { --gutter: 20px; --lw: 3px; --post: 18px; }
+  body { font-size: 16px; }
+
+  .hero { padding-top: 24px; }
+
+  /* les cotes deviennent une ligne de chiffres sous le terrain */
+  .cotes {
+    order: 2;
+    grid-template-columns: 1fr 1fr 1fr;
+    height: auto;
+    margin: 40px 0 0;
+  }
+  .hero { display: flex; flex-direction: column; }
+  .court { order: 1; }
+  .cote { padding: 12px 0; }
+  .cote::before { display: none; }
+  .cote-text {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 0 6px;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .cote-text .num { font-size: 34px; }
+
+  .court { aspect-ratio: 610 / 1340; }
+
+  /* lignes de service long : horizontales */
+  .ln-lsd-a { top: calc(5.67% - var(--lw) / 2); left: 0; height: var(--lw); width: 100%; }
+  .ln-lsd-b { top: calc(94.33% - var(--lw) / 2); left: 0; height: var(--lw); width: 100%; }
+  /* lignes de service court */
+  .ln-ssl-a { top: calc(35.22% - var(--lw) / 2); left: 0; height: var(--lw); width: 100%; }
+  .ln-ssl-b { top: calc(64.78% - var(--lw) / 2); left: 0; height: var(--lw); width: 100%; }
+  /* couloirs de simple : verticaux */
+  .ln-sgl-a { left: calc(7.54% - var(--lw) / 2); top: 0; width: var(--lw); height: 100%; }
+  .ln-sgl-b { left: calc(92.46% - var(--lw) / 2); top: 0; width: var(--lw); height: 100%; }
+  /* lignes médianes */
+  .ln-ctr-a { left: calc(50% - var(--lw) / 2); top: 0; width: var(--lw); height: 35.22%; }
+  .ln-ctr-b { left: calc(50% - var(--lw) / 2); top: 64.78%; width: var(--lw); height: 35.22%; }
+  /* filet horizontal */
+  .ln-net {
+    top: calc(50% - var(--lw) / 2);
+    left: 0;
+    height: var(--lw);
+    width: 100%;
+    background: repeating-linear-gradient(
+      to right,
+      var(--ink) 0 var(--lw),
+      transparent var(--lw) calc(var(--lw) * 2.5)
+    );
+  }
+  .post {
+    left: auto;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .post-a { left: calc(-0.7 * var(--post) - var(--lw)); }
+  .post-b { right: calc(-0.7 * var(--post) - var(--lw)); bottom: auto; }
+
+  /* moitié haute : le titre */
+  .zone-title {
+    width: 100%;
+    height: 50%;
+    padding: 7cqw 6cqw 5cqw;
+  }
+  .zone-title h1 { font-size: 23cqw; }
+  .zone-title p { padding-top: 4cqw; font-size: 15px; }
+
+  /* zone avant, sous le filet : bouton principal */
+  .zone-net {
+    left: calc(7.54% + var(--lw) / 2);
+    top: calc(50% + var(--lw) / 2);
+    width: calc(84.92% - var(--lw));
+    height: calc(14.78% - var(--lw));
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 4cqw;
+  }
+  .zone-net .zone-cta {
+    white-space: normal;
+    writing-mode: horizontal-tb;
+    transform: none;
+    align-self: auto;
+    font-size: 7.4cqw;
+    text-align: right;
+  }
+  .zone-net .zone-cta .arrow { transform: none; }
+  .zone-net:hover .zone-cta .arrow { transform: translateX(0.15em); }
+
+  /* carrés de service : moitié basse, droite et gauche du serveur */
+  .zone-svc-droit {
+    left: calc(50% + var(--lw) / 2);
+    top: calc(64.78% + var(--lw) / 2);
+    width: calc(42.46% - var(--lw));
+    height: calc(29.55% - var(--lw));
+  }
+  .zone-svc-gauche {
+    left: calc(7.54% + var(--lw) / 2);
+    top: calc(64.78% + var(--lw) / 2);
+    width: calc(42.46% - var(--lw));
+    height: calc(29.55% - var(--lw));
+  }
+  .zone-svc { padding: 4cqw 4cqw; }
+  .zone-cta { font-size: 8.4cqw; }
+  .zone-label { font-size: 10px; letter-spacing: 0.16em; }
+  .zone-label::before { width: 12px; }
+
+  /* titres de section */
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+  }
+  .section-head h2,
+  .clubs-intro h2 { font-size: 48px; }
+  .rencontres { padding-top: 56px; }
+
+  /* tableau des rencontres : liste de lignes, date à gauche */
+  .board-tag {
+    position: static;
+    display: block;
+    padding: 8px 12px;
+    font-size: 18px;
+    border-bottom: 3px solid var(--ink);
+  }
+  .board thead {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .board table, .board tbody { display: block; }
+  .board tr {
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    border-bottom: 1px solid var(--rule);
+  }
+  .board tbody tr:last-child { border-bottom: 0; }
+  .board td {
+    display: block;
+    width: auto;
+    padding: 0 16px;
+    border-bottom: 0;
+  }
+  .board td.date {
+    grid-row: 1 / span 4;
+    width: auto;
+    padding: 0;
+    border-right: 3px solid var(--ink);
+  }
+  .board td.date time,
+  .board td.date .date-tbd { height: 100%; min-height: 0; }
+  .board td.date b { font-size: 44px; }
+  .board td.date .date-tbd b { font-size: 20px; }
+  .board td.comp { padding-top: 16px; font-size: 24px; }
+  .board td.lieu { padding-top: 8px; }
+  .board td.cat { width: auto; }
+  .board td.insc { width: auto; text-align: left; padding-bottom: 8px; }
+  .board tbody tr:last-child td { border-bottom: 0; }
+
+  /* couloirs empilés */
+  .couloirs { padding-top: 80px; }
+  .lanes { grid-template-columns: 1fr; }
+  .lane,
+  .lane:nth-child(n) {
+    padding: 28px 0 32px;
+    border-left: 0;
+    border-bottom: 3px solid var(--ink);
+  }
+  .lane:last-child { border-bottom: 0; }
+  .lane-num { font-size: 56px; }
+  .lane h2 { margin-top: 16px; font-size: 36px; }
+
+  /* clubs sur une colonne */
+  .clubs { padding-top: 80px; }
+  .clubs-intro p { font-size: 16px; }
+  .clubs-intro .btn { font-size: 24px; min-height: 56px; }
+  .clubs-list { grid-template-columns: 1fr; column-gap: 0; }
+  .clubs-list li { padding: 12px 0; }
+  .ville { font-size: 26px; }
+  .club { font-size: 13px; }
+
+  /* pied de page */
+  .site-footer { margin-top: 80px; }
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding-top: 48px;
+    padding-bottom: 40px;
+  }
+  .footer-brand { font-size: 26px; }
+  .footer-brand .brand-num { font-size: 60px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; }
+}
