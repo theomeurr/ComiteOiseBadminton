@@ -99,6 +99,7 @@ i { font-style: normal; }
 }
 
 .arrow { display: inline-block; }
+.arrow--down { transform: rotate(90deg); }
 .nowrap { white-space: nowrap; }
 
 /* Nombres en accent, façon tableau de score */
@@ -544,7 +545,7 @@ i { font-style: normal; }
 }
 .board td.lieu { width: 180px; font-weight: 600; }
 .board td.cat { width: 160px; color: var(--ink-2); }
-.board td.insc { width: 170px; text-align: right; }
+.board td.insc { width: 170px; text-align: right; white-space: nowrap; }
 
 /* ---------- Quatre couloirs ---------- */
 .couloirs { padding-top: 112px; }
@@ -635,13 +636,20 @@ i { font-style: normal; }
 }
 
 .clubs-list li {
+  border-bottom: 1px solid var(--rule);
+}
+.clubs-list a,
+.clubs-list .row {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 16px;
+  min-height: 44px;
   padding: 16px 0;
-  border-bottom: 1px solid var(--rule);
+  text-decoration: none;
 }
+.clubs-list a:hover .ville,
+.clubs-list a:focus-visible .ville { color: var(--accent); }
 
 .ville {
   font-family: var(--display);
@@ -1021,7 +1029,8 @@ i { font-style: normal; }
   .clubs-intro p { font-size: 16px; }
   .clubs-intro .btn { font-size: 24px; min-height: 56px; }
   .clubs-list { grid-template-columns: 1fr; column-gap: 0; }
-  .clubs-list li { padding: 12px 0; }
+  .clubs-list a,
+  .clubs-list .row { padding: 12px 0; }
   .ville { font-size: 26px; }
   .club { font-size: 13px; }
 
@@ -1040,4 +1049,675 @@ i { font-style: normal; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
+}
+
+/* =====================================================================
+   PAGES INTÉRIEURES
+   Chaque page s'ouvre sur un demi-terrain : fond de court à gauche,
+   filet à droite. Les rubriques de la page occupent la zone avant.
+   ===================================================================== */
+
+/* Rubrique courante dans le menu */
+.nav a[aria-current="page"] { border-bottom-color: var(--ink); }
+
+/* ---------- Fil d'Ariane ---------- */
+.crumbs { margin-bottom: 12px; }
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 14px;
+}
+.crumbs li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 44px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.crumbs li + li::before {
+  content: "";
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+}
+.crumbs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.crumbs a:hover,
+.crumbs a:focus-visible { border-bottom-color: var(--accent); }
+
+/* ---------- En-tête de page : le demi-terrain ---------- */
+.page-head { padding-top: 16px; }
+
+.half {
+  --sgl: 32px;                 /* couloir de simple */
+  position: relative;
+  display: grid;
+  grid-template-columns: 70.45% 29.55%;   /* fond de court | zone avant (1,98 m / 6,70 m) */
+  min-height: 440px;
+  background: var(--court);
+  border: var(--lw) solid var(--ink);
+  border-right: 0;
+  container-type: inline-size;
+}
+
+.half .lines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ligne de service long en double : 0,76 m du fond */
+.hl-lsd { left: calc(11.34% - var(--lw) / 2); top: 0; width: var(--lw); height: 100%; }
+/* ligne de service court : 1,98 m du filet */
+.hl-ssl { left: calc(70.45% - var(--lw) / 2); top: 0; width: var(--lw); height: 100%; }
+/* couloirs de simple */
+.hl-sgl-a { top: calc(var(--sgl) - var(--lw) / 2); left: 0; width: 100%; height: var(--lw); }
+.hl-sgl-b { bottom: calc(var(--sgl) - var(--lw) / 2); left: 0; width: 100%; height: var(--lw); }
+/* ligne médiane : du fond à la ligne de service court */
+.hl-ctr { top: calc(50% - var(--lw) / 2); left: 0; width: 70.45%; height: var(--lw); }
+/* filet en pointillés, sur le bord droit */
+.hl-net {
+  top: calc(-1 * var(--lw));
+  right: 0;
+  width: var(--lw);
+  height: calc(100% + 2 * var(--lw));
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--ink) 0 var(--lw),
+    transparent var(--lw) calc(var(--lw) * 2.5)
+  );
+}
+.half .post { left: calc(100% - var(--lw) / 2); }
+
+.half-main {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: calc(var(--sgl) + 28px) 4cqw calc(var(--sgl) + 26px) 3cqw;
+}
+.half-main h1 { font-size: 10cqw; }
+
+.lede {
+  margin-top: auto;
+  padding-top: 32px;
+  max-width: 44ch;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.5;
+}
+/* le texte interrompt les lignes, comme la cote d'un plan */
+.lede span {
+  background: var(--court);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* zone avant : les rubriques de la page */
+.half-zones {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--sgl) + var(--lw) / 2) var(--lw) calc(var(--sgl) + var(--lw) / 2) calc(var(--lw) / 2);
+}
+
+.hz {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 64px;
+  padding: 14px 1.8cqw;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+.hz + .hz { border-top: 1px solid var(--rule); }
+.hz:hover,
+.hz:focus-visible { background: var(--dark); }
+
+.hz-cta {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: max(22px, 2.3cqw);
+  line-height: 0.92;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.hz--accent {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.hz--accent .hz-cta { color: var(--on-accent); }
+.hz--accent:hover,
+.hz--accent:focus-visible { background: var(--ink); }
+
+/* ---------- Sections ---------- */
+.block { padding-top: 104px; scroll-margin-top: 16px; }
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.kicker::before {
+  content: "";
+  flex: none;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 4fr 8fr;
+  gap: 64px;
+  align-items: start;
+}
+.split-head h2 { font-size: 64px; }
+.split-head .sec-num {
+  display: block;
+  margin-bottom: 18px;
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 80px;
+  line-height: 0.85;
+  color: var(--accent);
+}
+.split-head p {
+  max-width: 36ch;
+  margin-top: 20px;
+  font-weight: 500;
+}
+.split-head .btn,
+.split-head .link-arrow { margin-top: 24px; }
+
+.split-body > * + * { margin-top: 36px; }
+
+.prose > * + * { margin-top: 16px; }
+.prose p { max-width: 64ch; font-size: 18px; }
+
+.sub-title {
+  font-size: 36px;
+  font-weight: 800;
+}
+
+.note {
+  max-width: 70ch;
+  font-size: 15px;
+  color: var(--ink-2);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 32px;
+}
+
+/* Listes à tirets, comme un trait de cote */
+.ticks { border-top: 3px solid var(--ink); }
+.ticks li {
+  position: relative;
+  padding: 14px 0 14px 34px;
+  border-bottom: 1px solid var(--rule);
+}
+.ticks li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 26px;
+  width: 18px;
+  height: 2px;
+  background: var(--ink);
+}
+.ticks strong { font-weight: 700; }
+
+/* Fiche technique : un tableau de score */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin: 0;
+  overflow: hidden;
+  border-top: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+}
+.facts > div {
+  margin-left: -3px;
+  padding: 20px 20px 24px;
+  border-left: 3px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+}
+.facts dt {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.facts dd {
+  margin: 12px 0 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+.facts dd { overflow-wrap: anywhere; }
+.facts dd small {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--text);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.4;
+  text-transform: none;
+  color: var(--ink-2);
+}
+.facts dd small a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: -12px 0;
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.facts dd small a:hover,
+.facts dd small a:focus-visible { border-bottom-color: var(--accent); }
+
+/* Liste numérotée */
+.numlist { border-top: 3px solid var(--ink); }
+.numlist li {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.numlist .n {
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 52px;
+  line-height: 0.85;
+  color: var(--accent);
+}
+.numlist h3 {
+  font-size: 34px;
+  font-weight: 800;
+}
+.numlist p {
+  margin-top: 10px;
+  color: var(--ink-2);
+}
+
+/* Échelle des catégories, tracée comme une cote */
+.scale {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}
+.scale li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border-left: 2px solid var(--ink);
+}
+.scale li:last-child { border-right: 2px solid var(--ink); }
+.scale li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--ink);
+}
+.scale span {
+  position: relative;
+  padding: 0 10px;
+  background: var(--bg);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Emplacements [Photo] et [Carte] */
+.slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 7;
+  padding: 24px;
+  border: 3px solid var(--ink);
+  background: var(--court);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--ink-2);
+}
+.slot--photo { aspect-ratio: 16 / 9; }
+
+/* ---------- Tableau : variantes ---------- */
+.board + .board-foot,
+.board-foot { margin-top: 20px; }
+.board-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 32px;
+}
+
+.board td.date b.range { font-size: 40px; }
+.board td.date sup {
+  font-size: 0.42em;
+  vertical-align: top;
+  line-height: 1;
+}
+.board td.comp small {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--text);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.35;
+  text-transform: none;
+  color: var(--ink-2);
+}
+.board-tag--static {
+  position: static;
+  display: inline-block;
+}
+
+/* tableau sans colonne de date (documents) */
+.board--plain th:first-child {
+  width: auto;
+  padding: 18px 24px;
+  text-align: left;
+}
+.board--plain td.comp { padding-top: 22px; padding-bottom: 22px; }
+
+/* ---------- Clubs ---------- */
+.club-card {
+  display: grid;
+  grid-template-columns: 4fr 8fr;
+  gap: 64px;
+  padding: 40px 0 44px;
+  border-top: 3px solid var(--ink);
+  scroll-margin-top: 16px;
+}
+.club-card:last-child { border-bottom: 3px solid var(--ink); }
+
+.club-n {
+  display: block;
+  margin-bottom: 14px;
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--accent);
+}
+.club-id h2 { font-size: 56px; }
+.club-id h2 .ville { font-size: inherit; line-height: inherit; }
+.club-sigle abbr { text-decoration: none; }
+.club-nom {
+  display: block;
+  margin-top: 14px;
+  font-family: var(--text);
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.35;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.club-sigle {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 8px;
+  border: 2px solid var(--ink);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+}
+
+.club-facts { margin: 0; border-top: 1px solid var(--rule); }
+.club-facts > div {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 24px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.club-facts dt {
+  padding-top: 3px;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.club-facts dd { margin: 0; }
+.club-facts dd li + li { margin-top: 4px; }
+.club-facts a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.club-facts a:hover,
+.club-facts a:focus-visible { border-bottom-color: var(--accent); }
+.club-facts .inline-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 24px;
+}
+.club-facts .inline-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: -12px 0;
+}
+
+.club-text { margin-top: 20px; max-width: 64ch; }
+.club-text p + p { margin-top: 12px; }
+
+/* ---------- Contact ---------- */
+.contact { margin: 0; border-top: 3px solid var(--ink); }
+.contact > div {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 24px;
+  align-items: baseline;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.contact dt {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.contact dd {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 32px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.contact dd a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: -6px 0;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.contact dd a[href^="mailto:"] { text-transform: none; }
+.contact dd a:hover,
+.contact dd a:focus-visible { border-bottom-color: var(--accent); }
+
+/* ---------- Pages intérieures : tablette ---------- */
+@media (max-width: 1180px) {
+  .split-head h2 { font-size: 56px; }
+  .club-id h2 { font-size: 48px; }
+}
+
+@media (max-width: 900px) {
+  .split,
+  .club-card { grid-template-columns: 1fr; gap: 28px; }
+  .split-head p { max-width: 60ch; }
+  .js .nav a[aria-current="page"] { color: var(--accent); }
+}
+
+/* ---------- Pages intérieures : mobile, le demi-terrain à la verticale ---------- */
+@media (max-width: 719px) {
+  .page-head { padding-top: 8px; }
+
+  .half {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    border-right: var(--lw) solid var(--ink);
+    border-bottom: 0;
+  }
+
+  .hl-lsd { top: 44px; left: 0; width: 100%; height: var(--lw); }
+  .hl-ssl,
+  .hl-ctr { display: none; }
+  .hl-sgl-a { top: 0; left: calc(7.54% - var(--lw) / 2); width: var(--lw); height: 100%; }
+  .hl-sgl-b { top: 0; bottom: auto; left: calc(92.46% - var(--lw) / 2); width: var(--lw); height: 100%; }
+  .hl-net {
+    top: auto;
+    bottom: 0;
+    left: calc(-1 * var(--lw));
+    right: auto;
+    width: calc(100% + 2 * var(--lw));
+    height: var(--lw);
+    background: repeating-linear-gradient(
+      to right,
+      var(--ink) 0 var(--lw),
+      transparent var(--lw) calc(var(--lw) * 2.5)
+    );
+  }
+  .half .post {
+    top: calc(100% - var(--lw) / 2);
+    bottom: auto;
+    transform: translateY(-50%);
+  }
+  .half .post-a { left: calc(-0.7 * var(--post) - var(--lw)); }
+  .half .post-b { left: auto; right: calc(-0.7 * var(--post) - var(--lw)); }
+
+  .half-main { padding: 64px 5% 28px 5%; }
+  /* ligne médiane, du fond à la ligne de service court */
+  .half-main::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: calc(50% - var(--lw) / 2);
+    width: var(--lw);
+    background: var(--ink);
+  }
+  .half-main h1 { font-size: 15cqw; }
+  .lede { padding-top: 24px; font-size: 16px; }
+
+  .half-zones {
+    border-top: var(--lw) solid var(--ink);
+    padding: 0 calc(7.54% + var(--lw) / 2) var(--lw);
+  }
+  .hz {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    min-height: 60px;
+    padding: 12px 4%;
+  }
+  .hz-cta { font-size: 24px; text-align: right; }
+
+  .block { padding-top: 72px; }
+  .split-head h2 { font-size: 44px; }
+  .split-head .sec-num { font-size: 60px; }
+  .prose p { font-size: 16px; }
+  .sub-title { font-size: 30px; }
+
+  .facts { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .facts > div { padding: 16px 14px 18px; }
+  .facts dd { font-size: 24px; }
+
+  .numlist li { grid-template-columns: 56px 1fr; gap: 16px; padding: 20px 0; }
+  .numlist .n { font-size: 38px; }
+  .numlist h3 { font-size: 28px; }
+
+  .scale { grid-template-columns: repeat(3, 1fr); row-gap: 12px; }
+  .scale li:nth-child(3n) { border-right: 2px solid var(--ink); }
+  .scale span { font-size: 10px; letter-spacing: 0.14em; padding: 0 6px; }
+
+  .slot { aspect-ratio: 4 / 3; }
+
+  .board--plain tr { grid-template-columns: 1fr; }
+  .board--plain td.comp { padding-top: 16px; padding-bottom: 0; }
+  .board td.date b.range { font-size: 28px; }
+
+  .club-card { padding: 32px 0 36px; gap: 20px; }
+  .club-id h2 { font-size: 40px; }
+  .club-facts > div { grid-template-columns: 1fr; gap: 6px; }
+
+  .contact > div { grid-template-columns: 1fr; gap: 6px; }
+  .contact dd { font-size: 24px; }
+}
+
+/* Divisions des interclubs, comme les numéros d'un tableau de salle */
+.divisions {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+  background: var(--dark);
+}
+.divisions li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 112px;
+  border-left: 3px solid var(--ink);
+}
+.divisions li:first-child { border-left: 0; }
+.divisions .num {
+  font-size: 64px;
+  line-height: 0.85;
+}
+
+@media (max-width: 719px) {
+  .divisions li { min-height: 76px; }
+  .divisions .num { font-size: 40px; }
 }
